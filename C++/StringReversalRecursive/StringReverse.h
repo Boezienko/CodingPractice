@@ -5,7 +5,7 @@
 
 class StringReverse {
 	public:
-	std::string reverseString(const std::string& str);
+		std::string reverseString(const std::string& str);
 };
 
 #endif
