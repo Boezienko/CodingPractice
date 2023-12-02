@@ -2,65 +2,120 @@
 #include <iomanip>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
+#include <iterator>
 
 Month::Month(int month, int year){
 	this->month = month;
 	this->year = year;
-	this->setNumDays(month, year);
-	this->setFirstDay();
+	setNumDays(month, year);
+	setFirstDay();
+	generateDays(); 
+}
+
+Month::Month(int month, int year, std::string prev_mg, std::string cur_mg, std::string next_mg){
+	this->month = month;
+	this->year = year;
+	setNumDays(month, year);
+	setFirstDay();
+	generateBoesSplitDays(prev_mg, cur_mg, next_mg); 
+}
+
+Month::Month(const Month& new_month){
+	this->month = new_month.year;
+	this->year = new_month.year;
+	setNumDays(month, year);
+	setFirstDay();
+	generateDays();
+}
+
+Month::~Month(){
+	for(Week* week : weeks){
+		for(Day* day : week->getDays()) {
+			delete[] day;
+		}
+		delete[] week;
+	}
 }
 
 // implementation of setNumDays 
 // sets the number of days for the inputted month
 void Month::setNumDays(int month, int year){
 	
-	if(month == 2 && Month::isLeapYear(year)){
+	if(month == 2 && isLeapYear(year)){
 		num_days = DAYS_IN_MONTH[month - 1] + 1;
 	} else {
 		num_days = DAYS_IN_MONTH[month - 1];
 	}
 }
 
+// All program memory allocation
+void Month::generateDays(){
+	int day_count = 1;
+	int numWhileLoops = 0;
+
+	while(day_count <= num_days){
+		Week* newWeek = new Week(); // probably will need to make destructor 
+		
+		// populating new week
+		for(int day = 0; day < 7; day++){
+			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){
+				newWeek->addDay(new Day());
+			} else {
+				newWeek->addDay(new Day(day_count));
+				day_count++;
+			}
+		}
+		weeks.push_back(newWeek);
+		numWhileLoops++;
+	}
+}
+
+void Month::generateBoesSplitDays(std::string prev_mg, std::string cur_mg, std::string next_mg){
+	int day_count = 1;
+	int numWhileLoops = 0;
+	std::string temp = "";
+
+	while(day_count <= num_days){
+		Week* newWeek = new Week();
+		
+		// populating new week
+		for(int day = 0; day < 7; day++){
+			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){
+				newWeek->addDay(new Day());
+			} else {
+				if(day == 1 || day == 3 || day == 5) {
+					newWeek->addDay(new Day(day_count, cur_mg));
+					day_count++;
+				} else if (day == 2){
+					newWeek->addDay(new Day(day_count, next_mg));
+					day_count++;
+				} else if (day == 4){
+					newWeek->addDay(new Day(day_count, prev_mg));
+					day_count++;
+				} else {
+					newWeek->addDay(new Day(day_count));
+					day_count++;
+				}
+			}
+		}
+		weeks.push_back(newWeek);
+		numWhileLoops++;
+		temp = cur_mg;
+		cur_mg = next_mg;
+		next_mg = prev_mg;
+		prev_mg = temp;
+	}	
+}
+
+
 // implementation of displayMonth
 // prints the month
 void  Month::displayMonth(){
-	int day_count = 1;
-	bool cell_to_print[7] = {0,0,0,0,0,0,0};
-
-    for (int i = 0; i < 6; i++) {
-		
-        for (int j = 0; j < 7; j++) {
-			
-            if (i == 0 && j < first_day) { // cells before the first day
-                std::cout << std::setw(CELL_WIDTH) << "";
-				cell_to_print[j] = false;
-			} else if (day_count > num_days){ // cells after the month has run out of days
-                std::cout << std::setw(CELL_WIDTH) << "";
-				cell_to_print[j] = false;
-			} else { // cells with day numbers
-                std::cout << std::setw(CELL_WIDTH - 1) << day_count << "|";
-				cell_to_print[j] = true;	
-                day_count++;
-            }
-        }
-		std::cout << "\n";
-		
-		//newest format changes
-		for (int u = 0; u < 4; u++){
-			
-			for (int j = 0; j < 7; j++) {
-				if(cell_to_print[j]){
-					std::cout << std::setw(CELL_WIDTH) << "|";
-				}
-			}
-			std::cout << "\n";
-        }
-		
-		
-		
-        std::cout << "\n";
-    }
-
+	
+	for(Week* week : weeks){
+		week->displayWeek();
+	}
 }
 
 // returns true if year is a leap year and false otherwise
@@ -73,7 +128,7 @@ void Month::setFirstDay(){
 	int loc_month = month; // local copy of month
 	int days_this_year = 0; // to hold number of days this year
 	
-	int starting_day = 6; // starting day from 1800
+	int starting_day = 4; // starting day of the week index from 2000
 	
 	// counting days already passed this year
 	while(loc_month > 0){
@@ -81,8 +136,8 @@ void Month::setFirstDay(){
 		loc_month -= 1;
 	}
 	
-	for(int i = 1800; i < year; i++){
-		if(isLeapYear(year)){
+	for(int i = 2000; i < year; i++){
+		if(isLeapYear(i)){
 			starting_day += 366;
 		} else {
 			starting_day += 365;
@@ -98,4 +153,16 @@ int Month::getMonth(){
 
 int Month::getYear(){
 	return year;
+}
+
+std::string Month::getMessage(){
+	return message;
+}
+
+int Month::getFirstDayIndex(){
+	return first_day;
+}
+
+std::vector<Week*> Month::getWeeks(){
+	return weeks;
 }
