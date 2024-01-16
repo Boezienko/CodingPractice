@@ -21,9 +21,9 @@ Month::Month(int month, int year, std::string prev_mg, std::string cur_mg, std::
 	generateBoesSplitDays(prev_mg, cur_mg, next_mg); 
 }
 
-Month::Month(const Month& new_month){
-	this->month = new_month.year;
-	this->year = new_month.year;
+Month::Month(Month& new_month){
+	setMonth(new_month.getMonth());
+	setYear(new_month.getYear());
 	setNumDays(month, year);
 	setFirstDay();
 	generateDays();
@@ -31,10 +31,7 @@ Month::Month(const Month& new_month){
 
 Month::~Month(){
 	for(Week* week : weeks){
-		for(Day* day : week->getDays()) {
-			delete[] day;
-		}
-		delete[] week;
+		delete week;
 	}
 }
 
@@ -165,4 +162,12 @@ int Month::getFirstDayIndex(){
 
 std::vector<Week*> Month::getWeeks(){
 	return weeks;
+}
+
+void Month::setYear(int new_year){
+	this->year = new_year;
+}
+
+void Month::setMonth(int new_month){
+	this->month = new_month;
 }

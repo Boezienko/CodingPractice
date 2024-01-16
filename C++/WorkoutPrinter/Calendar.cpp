@@ -3,9 +3,9 @@
 #include <iostream>
 
 Calendar::~Calendar(){
-	// for(Month* month : months){
-		// delete [] month;
-	// }
+	for(Month* month : months){
+		delete month;
+	}
 }
 void Calendar::displayCalendar(){
 	

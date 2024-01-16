@@ -1,4 +1,3 @@
-
 #include "Month.h"
 #include "Calendar.h"
 
@@ -12,9 +11,7 @@ int main() {
 	myCalendar->addMonth(november);
 	myCalendar->displayCalendar();
 	
-	delete[] myCalendar;	
-	//delete[] october;
-	//delete[] november;
-
+	delete myCalendar;	
+	
     return 0;
 }

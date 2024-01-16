@@ -7,7 +7,7 @@ Week::Week(){}
 
 Week::~Week(){
 	for(Day* day : days){
-		 delete [] day;
+		delete  day;
 	}
 }
 
@@ -58,6 +58,3 @@ void Week::printCells(){
 	}
 	std::cout << HORIZONTAL_LINE << std::endl;
 }
-
-
-

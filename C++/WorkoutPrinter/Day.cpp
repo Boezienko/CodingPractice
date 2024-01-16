@@ -8,7 +8,8 @@
 		muscle_group = "";
 	}
 	
-	Day::~Day(){}
+	Day::~Day(){
+	}
 		
 	Day::Day(int day_num){
 		this->day_num = day_num;
@@ -52,4 +53,3 @@
 			std::cout << std::setw(CELL_WIDTH + 1);
 		}
 	}
-	
