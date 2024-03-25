@@ -3,16 +3,20 @@
 #include <iomanip>
 
 
+// default constructor
 Week::Week(){}
 
+// destructor
 Week::~Week(){
 	for(Day* day : days){
 		delete  day;
 	}
 }
 
+// printing whole week
 void Week::displayWeek(){
-
+	
+	// printing days with number
 	for(int day = 0; day < 7; day++){
 		
 		if(day == 0){
@@ -24,6 +28,7 @@ void Week::displayWeek(){
 	}
 	std::cout << '\n';
 	
+	// printing muscle groups 
 	for(int day = 0; day < 7; day++){
 		
 		if(day == 0){
@@ -46,6 +51,7 @@ std::vector<Day*> Week::getDays(){
 	return days;
 }
 
+// printing the boxes
 void Week::printCells(){
 	for(int rows = 0; rows < 4; rows++){
 		for(int day = 0; day < 7; day++){

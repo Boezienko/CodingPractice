@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <iterator>
 
+// default constructor
+Month::Month(){}
+
+// paremeterized constructor I
 Month::Month(int month, int year){
 	this->month = month;
 	this->year = year;
@@ -13,6 +17,7 @@ Month::Month(int month, int year){
 	generateDays(); 
 }
 
+// paremeterized constructor II
 Month::Month(int month, int year, std::string prev_mg, std::string cur_mg, std::string next_mg){
 	this->month = month;
 	this->year = year;
@@ -21,6 +26,7 @@ Month::Month(int month, int year, std::string prev_mg, std::string cur_mg, std::
 	generateBoesSplitDays(prev_mg, cur_mg, next_mg); 
 }
 
+// copy constructor
 Month::Month(Month& new_month){
 	setMonth(new_month.getMonth());
 	setYear(new_month.getYear());
@@ -29,6 +35,7 @@ Month::Month(Month& new_month){
 	generateDays();
 }
 
+// destructor
 Month::~Month(){
 	for(Week* week : weeks){
 		delete week;
@@ -36,7 +43,7 @@ Month::~Month(){
 }
 
 // implementation of setNumDays 
-// sets the number of days for the inputted month
+// sets the number of days for the inputted month and year
 void Month::setNumDays(int month, int year){
 	
 	if(month == 2 && isLeapYear(year)){
@@ -46,19 +53,20 @@ void Month::setNumDays(int month, int year){
 	}
 }
 
-// All program memory allocation
+// generating the months days *this does not add the muscle groups
 void Month::generateDays(){
 	int day_count = 1;
 	int numWhileLoops = 0;
-
+	
+	
 	while(day_count <= num_days){
-		Week* newWeek = new Week(); // probably will need to make destructor 
+		Week* newWeek = new Week(); 
 		
 		// populating new week
 		for(int day = 0; day < 7; day++){
-			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){
+			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){ // for other months days
 				newWeek->addDay(new Day());
-			} else {
+			} else { // for our months days
 				newWeek->addDay(new Day(day_count));
 				day_count++;
 			}
@@ -68,6 +76,7 @@ void Month::generateDays(){
 	}
 }
 
+// generatings the months days and the muscle group to train for that day
 void Month::generateBoesSplitDays(std::string prev_mg, std::string cur_mg, std::string next_mg){
 	int day_count = 1;
 	int numWhileLoops = 0;
@@ -78,9 +87,9 @@ void Month::generateBoesSplitDays(std::string prev_mg, std::string cur_mg, std::
 		
 		// populating new week
 		for(int day = 0; day < 7; day++){
-			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){
+			if((numWhileLoops == 0 && day < first_day) || day_count > num_days){ // for other months days
 				newWeek->addDay(new Day());
-			} else {
+			} else { // for our months days
 				if(day == 1 || day == 3 || day == 5) {
 					newWeek->addDay(new Day(day_count, cur_mg));
 					day_count++;
@@ -98,6 +107,8 @@ void Month::generateBoesSplitDays(std::string prev_mg, std::string cur_mg, std::
 		}
 		weeks.push_back(newWeek);
 		numWhileLoops++;
+		
+		// preping muscle groups for the next week
 		temp = cur_mg;
 		cur_mg = next_mg;
 		next_mg = prev_mg;
@@ -133,6 +144,7 @@ void Month::setFirstDay(){
 		loc_month -= 1;
 	}
 	
+	// we begin with the year 2000 and add up the days that have passed since then
 	for(int i = 2000; i < year; i++){
 		if(isLeapYear(i)){
 			starting_day += 366;
@@ -144,6 +156,7 @@ void Month::setFirstDay(){
 	first_day = (starting_day + days_this_year) % 7;	
 }
 
+// getters
 int Month::getMonth(){
 	return month;
 }
@@ -164,6 +177,7 @@ std::vector<Week*> Month::getWeeks(){
 	return weeks;
 }
 
+// setters
 void Month::setYear(int new_year){
 	this->year = new_year;
 }

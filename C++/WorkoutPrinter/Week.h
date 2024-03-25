@@ -5,7 +5,6 @@
 #include <string>
 #include "Day.h"
 
-
 class Week {
 	public:
 		Week();
@@ -20,8 +19,6 @@ class Week {
 		std::string HORIZONTAL_LINE = std::string(148, '_');
 		const int CELL_WIDTH = 20;
 		void printCells();
-
-
 };
 
 #endif

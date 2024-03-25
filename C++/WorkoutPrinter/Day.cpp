@@ -2,29 +2,35 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-
+	
+	// default constructor
 	Day::Day(){
 		day_num = 0;
 		muscle_group = "";
 	}
 	
+	// destructor
 	Day::~Day(){
 	}
-		
+	
+	// paremetrized constructor I
 	Day::Day(int day_num){
 		this->day_num = day_num;
 		muscle_group = "";
 	}
 	
+	// paremetrized constructor II
 	Day::Day(int day_num, std::string muscle_group){
 		this->day_num = day_num;
 		this->muscle_group = muscle_group;
 	}
 	
+	// getter for muscle group
 	std::string Day::getMuscleGroup(){
 		return this->muscle_group;
 	}
 	
+	// getter for numeric value of day
 	int Day::getDayNum(){
 		return this->day_num;
 	}

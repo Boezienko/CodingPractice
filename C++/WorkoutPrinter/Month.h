@@ -6,6 +6,7 @@
 
 class Month {
 	public:
+		Month();
 		Month(int month, int year);
 		Month(int month, int year, std::string prev_mg, std::string cur_mg, std::string next_mg);
 		~Month();
