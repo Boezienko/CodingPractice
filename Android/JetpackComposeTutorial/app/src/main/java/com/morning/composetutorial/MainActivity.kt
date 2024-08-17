@@ -15,6 +15,14 @@ import com.morning.composetutorial.ui.theme.ComposeTutorialTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContent { 
+            MessageCard(name = "Boe")
+        }
+    }
+    
+    // composable function to display text
+    @Composable
+    fun MessageCard(name: String) {
+        Text(text = "Hello $name!")
     }
 }
