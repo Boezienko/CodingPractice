@@ -27,8 +27,12 @@ import com.morning.composetutorial.ui.theme.ComposeTutorialTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { 
-            MessageCard(Message("Android", "Jetpack Compose"))
+        setContent {
+            ComposeTutorialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    MessageCard(Message("Android", "Jetpack Compose"))
+                }
+            }
         }
     }
 
@@ -71,6 +75,12 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun PreviewMessageCard(){
-        MessageCard(Message("Lexi", "Hey, take a look at Jetpack Compose, it's great!"))
+        ComposeTutorialTheme {
+            Surface {
+                MessageCard(
+                    msg = Message("Lexi", "Hey, take a look at Jetpack Compose, it's great!")
+                )
+            }
+        }
     }
 }
