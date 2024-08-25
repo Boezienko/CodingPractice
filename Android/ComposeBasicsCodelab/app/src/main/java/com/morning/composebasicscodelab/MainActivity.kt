@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeBasicsCodelabTheme {
-                MyApp()
+                MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
@@ -38,8 +38,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    val expanded = remember { mutableStateOf(false)}
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+    // used by instead of = so when we use expanded we don't have to use expanded.value
+    var expanded by remember { mutableStateOf(false)}
+    val extraPadding = if (expanded) 48.dp else 0.dp
     Surface(
             color = MaterialTheme.colorScheme.primary,
             modifier = modifier.padding(
@@ -57,9 +58,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 Text(text = name)
             }
             ElevatedButton(
-                onClick = { expanded.value = !expanded.value }
+                onClick = { expanded = !expanded }
             ) {
-                Text(if (expanded.value) "Show less" else "Show more")
+                Text(if (expanded) "Show less" else "Show more")
             }
         }
 
@@ -81,15 +82,13 @@ fun MyApp(modifier: Modifier = Modifier) {
     // we are hoisting this state from the OnboardingScreen to the MyApp
     var shouldShowOnboarding by remember { mutableStateOf(true) }
     
-    Surface {
+    Surface(modifier) {
         if (shouldShowOnboarding) {
-            OnboardingScreen()
+            OnboardingScreen( onContinueClicked = { shouldShowOnboarding = false })
         } else {
             Greetings()
         }
     }
-
-    Greetings()
 }
 
 @Preview
@@ -105,7 +104,7 @@ private fun Greetings(
     modifier: Modifier = Modifier,
     names: List<String> = listOf("World", "Compose")
 ) {
-    Column(modifier.padding(4.dp)) {
+    Column(modifier.padding(vertical = 4.dp)) {
         for(name in names){
             Greeting(name = name)
         }
@@ -121,10 +120,10 @@ fun GreetingsPreview(){
 }
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
-    // this is the state that we need to hoist
-    var shouldShowOnBoarding by remember { mutableStateOf(true) }
-
+fun OnboardingScreen(
+    onContinueClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -133,7 +132,7 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
         Text(text = "Welcome to the Basics Codelab")
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { shouldShowOnBoarding = false }
+            onClick = onContinueClicked
         ) {
             Text(text = "Continue")
         }
@@ -144,6 +143,6 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun OnboardingPreview() {
     ComposeBasicsCodelabTheme {
-        OnboardingScreen()
+        OnboardingScreen(onContinueClicked = {}) // o nothing on click
     }
 }
