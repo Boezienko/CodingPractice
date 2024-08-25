@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeBasicsCodelabTheme {
-                MyApp(modifier = Modifier.fillMaxSize())
+                MyApp()
             }
         }
     }
@@ -76,9 +76,34 @@ fun GreetingPreview() {
 }
 
 @Composable
-fun MyApp(
+fun MyApp(modifier: Modifier = Modifier) {
+
+    // we are hoisting this state from the OnboardingScreen to the MyApp
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    
+    Surface {
+        if (shouldShowOnboarding) {
+            OnboardingScreen()
+        } else {
+            Greetings()
+        }
+    }
+
+    Greetings()
+}
+
+@Preview
+@Composable
+fun MyAppPreview() {
+    ComposeBasicsCodelabTheme {
+        MyApp(Modifier.fillMaxSize())
+    }
+}
+
+@Composable
+private fun Greetings(
     modifier: Modifier = Modifier,
-    names: List<String> = listOf("World", "Compose"),
+    names: List<String> = listOf("World", "Compose")
 ) {
     Column(modifier.padding(4.dp)) {
         for(name in names){
@@ -87,8 +112,17 @@ fun MyApp(
     }
 }
 
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun GreetingsPreview(){
+    ComposeBasicsCodelabTheme {
+        Greetings()
+    }
+}
+
 @Composable
 fun OnboardingScreen(modifier: Modifier = Modifier) {
+    // this is the state that we need to hoist
     var shouldShowOnBoarding by remember { mutableStateOf(true) }
 
     Column(
