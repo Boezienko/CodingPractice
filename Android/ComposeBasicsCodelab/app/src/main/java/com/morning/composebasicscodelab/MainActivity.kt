@@ -3,6 +3,9 @@ package com.morning.composebasicscodelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,7 +46,14 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     // used by instead of = so when we use expanded we don't have to use expanded.value
     var expanded by rememberSaveable { mutableStateOf(false)}
-    val extraPadding = if (expanded) 48.dp else 0.dp
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp,
+        animationSpec = spring( // this parameter lets you customize the animation
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "Greeting expansion"
+    )
     Surface(
             color = MaterialTheme.colorScheme.primary,
             modifier = modifier.padding(
@@ -55,7 +65,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Column(
                 modifier = modifier
                     .weight(1f)
-                    .padding(bottom = extraPadding)
+                    // ensuring the padding is never negative because that could crash the app
+                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
             ){
                 Text(text = "Hello ")
                 Text(text = name)
@@ -71,54 +82,18 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 }
 
-@Preview(showBackground = true, widthDp = 320)
-@Composable
-fun GreetingPreview() {
-    ComposeBasicsCodelabTheme {
-        MyApp()
-    }
-}
-
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
 
     // we are hoisting this state from the OnboardingScreen to the MyApp
     var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
-    
+
     Surface(modifier) {
         if (shouldShowOnboarding) {
             OnboardingScreen( onContinueClicked = { shouldShowOnboarding = false })
         } else {
             Greetings()
         }
-    }
-}
-
-@Preview
-@Composable
-fun MyAppPreview() {
-    ComposeBasicsCodelabTheme {
-        MyApp(Modifier.fillMaxSize())
-    }
-}
-
-@Composable
-private fun Greetings(
-    modifier: Modifier = Modifier,
-    names: List<String> = List(1000) { "$it"}
-) {
-    LazyColumn(modifier.padding(vertical = 4.dp)) {
-        items(items = names) { name ->
-            Greeting(name = name)
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 320)
-@Composable
-fun GreetingsPreview(){
-    ComposeBasicsCodelabTheme {
-        Greetings()
     }
 }
 
@@ -142,10 +117,46 @@ fun OnboardingScreen(
     }
 }
 
+@Composable
+private fun Greetings(
+    modifier: Modifier = Modifier,
+    names: List<String> = List(1000) { "$it"}
+) {
+    LazyColumn(modifier.padding(vertical = 4.dp)) {
+        items(items = names) { name ->
+            Greeting(name = name)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MyAppPreview() {
+    ComposeBasicsCodelabTheme {
+        MyApp(Modifier.fillMaxSize())
+    }
+}
+
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun OnboardingPreview() {
     ComposeBasicsCodelabTheme {
         OnboardingScreen(onContinueClicked = {}) // o nothing on click
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun GreetingsPreview(){
+    ComposeBasicsCodelabTheme {
+        Greetings()
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun GreetingPreview() {
+    ComposeBasicsCodelabTheme {
+        MyApp()
     }
 }
