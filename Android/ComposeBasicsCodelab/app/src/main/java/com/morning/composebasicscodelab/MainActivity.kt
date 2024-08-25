@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     // used by instead of = so when we use expanded we don't have to use expanded.value
-    var expanded by remember { mutableStateOf(false)}
+    var expanded by rememberSaveable { mutableStateOf(false)}
     val extraPadding = if (expanded) 48.dp else 0.dp
     Surface(
             color = MaterialTheme.colorScheme.primary,
@@ -82,7 +83,7 @@ fun GreetingPreview() {
 fun MyApp(modifier: Modifier = Modifier) {
 
     // we are hoisting this state from the OnboardingScreen to the MyApp
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
     
     Surface(modifier) {
         if (shouldShowOnboarding) {
