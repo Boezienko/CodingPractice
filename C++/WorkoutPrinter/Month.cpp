@@ -136,16 +136,19 @@ void Month::setFirstDay(){
 	int loc_month = month; // local copy of month
 	int days_this_year = 0; // to hold number of days this year
 	
-	int starting_day = 4; // starting day of the week index from 2000
+	int starting_day = 6; // starting day of the week index from 2000 (Jan 1, 2000 was a saturday)
 	
 	// counting days already passed this year
-	while(loc_month > 0){
-		days_this_year += DAYS_IN_MONTH[loc_month];
-		loc_month -= 1;
+	for(int i = 1; i < month; ++i){
+		if(i == 2 && isLeapYear(year)){
+			days_this_year += 29;
+		} else {
+			days_this_year += DAYS_IN_MONTH[i - 1];
+		}
 	}
 	
 	// we begin with the year 2000 and add up the days that have passed since then
-	for(int i = 2000; i < year; i++){
+	for(int i = 2000; i < year; ++i){
 		if(isLeapYear(i)){
 			starting_day += 366;
 		} else {
