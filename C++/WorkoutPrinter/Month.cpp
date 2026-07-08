@@ -58,7 +58,6 @@ void Month::generateDays(){
 	int day_count = 1;
 	int numWhileLoops = 0;
 	
-	
 	while(day_count <= num_days){
 		Week* newWeek = new Week(); 
 		
@@ -116,7 +115,6 @@ void Month::generateBoesSplitDays(std::string prev_mg, std::string cur_mg, std::
 	}	
 }
 
-
 // implementation of displayMonth
 // prints the month
 void  Month::displayMonth(){
@@ -135,7 +133,6 @@ void Month::setFirstDay(){
 	
 	int loc_month = month; // local copy of month
 	int days_this_year = 0; // to hold number of days this year
-	
 	int starting_day = 4; // starting day of the week index from 2000 (Jan 1, 2000 was a thurseday)
 	
 	// counting days already passed this year
